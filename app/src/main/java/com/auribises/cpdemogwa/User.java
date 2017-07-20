@@ -74,4 +74,15 @@ public class User {
     public void setCity(String city) {
         this.city = city;
     }
+
+    @Override
+    public String toString() {
+        return "User Details: " +
+                "\n\nID : " + id +
+                "\n\nName : " + name +
+                "\n\nEmail : " + email  +
+                "\n\nPassword : " + password  +
+                "\n\nGender : " + gender  +
+                "\n\nCity : " + city;
+    }
 }
