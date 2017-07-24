@@ -21,7 +21,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 
     Context context;
     int resource;
-    ArrayList<User> userList;
+    ArrayList<User> userList,tempList;
 
     public UserAdapter(Context context, int resource, ArrayList<User> objects) {
         super(context, resource, objects);
@@ -29,6 +29,10 @@ public class UserAdapter extends ArrayAdapter<User> {
         this.context = context;
         this.resource = resource;
         userList = objects;
+
+
+        tempList = new ArrayList<>();
+        tempList.addAll(userList);
     }
 
     @NonNull
@@ -46,5 +50,23 @@ public class UserAdapter extends ArrayAdapter<User> {
         txtEmail.setText(user.getEmail());
 
         return view;
+    }
+
+    public void filter(String str){
+
+        userList.clear();
+
+        if(str.length()==0){
+            userList.addAll(tempList);
+        }else{
+            for(int i=0;i<tempList.size();i++){
+                if(tempList.get(i).getName().toLowerCase().contains(str.toLowerCase())){
+                    userList.add(tempList.get(i));
+                }
+            }
+        }
+
+
+        notifyDataSetChanged();
     }
 }

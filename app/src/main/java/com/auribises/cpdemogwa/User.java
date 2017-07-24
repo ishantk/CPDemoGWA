@@ -1,11 +1,13 @@
 package com.auribises.cpdemogwa;
 
+import java.io.Serializable;
+
 /**
  * Created by ishantkumar on 19/07/17.
  */
 
 // Bean or Model or POJO
-public class User {
+public class User implements Serializable{
 
     int id;
     String name;

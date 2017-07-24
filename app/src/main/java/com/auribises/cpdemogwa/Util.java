@@ -33,4 +33,5 @@ public class Util {
 
     public static final Uri USER_URI = Uri.parse("content://com.auribises.cpdemogwa.usercontentprovider/"+TAB_NAME);
 
+    public static final String KEY_USER = "keyUser";
 }

@@ -45,9 +45,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     ArrayAdapter<String> adapter;
 
-    User user;
+    User user,rcvUser;
 
     ContentResolver resolver;
+    boolean updateMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,33 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         rbMale.setOnClickListener(this);
         rbFemale.setOnClickListener(this);
 
+        Intent rcv = getIntent();
+        updateMode = rcv.hasExtra(Util.KEY_USER);
+
+        if(updateMode){
+            rcvUser = (User)rcv.getSerializableExtra(Util.KEY_USER);
+
+            eTxtName.setText(rcvUser.getName());
+            eTxtEmail.setText(rcvUser.getEmail());
+            eTxtPassword.setText(rcvUser.getPassword());
+
+            if(rcvUser.getGender().equals("Male")){
+                rbMale.setChecked(true);
+                rbFemale.setChecked(false);
+            }else{
+                rbMale.setChecked(false);
+                rbFemale.setChecked(true);
+            }
+
+            for(int i=0;i<adapter.getCount();i++){
+                if(rcvUser.getCity().equals(adapter.getItem(i))){
+                    spCity.setSelection(i);
+                    break;
+                }
+            }
+
+            btnSignUp.setText("Update User");
+        }
     }
 
     @Override
@@ -113,9 +141,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         values.put(Util.COL_GENDER,user.getGender());
         values.put(Util.COL_CITY,user.getCity());
 
-        Uri uri = resolver.insert(Util.USER_URI,values);
-        Toast.makeText(this,user.getName()+" registered successfully with id "+uri.getLastPathSegment(),Toast.LENGTH_LONG).show();
-        clearFields();
+        if(!updateMode) {
+            Uri uri = resolver.insert(Util.USER_URI, values);
+            Toast.makeText(this, user.getName() + " registered successfully with id " + uri.getLastPathSegment(), Toast.LENGTH_LONG).show();
+            clearFields();
+        }else{
+            String where = Util.COL_ID+" = "+rcvUser.getId();
+            int i = resolver.update(Util.USER_URI,values,where,null);
+            if(i>0){
+                Toast.makeText(this,rcvUser.getName()+ " updated...",Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
     }
 
     @Override
